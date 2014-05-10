@@ -1,0 +1,80 @@
+// bower:scss
+// endbower
+
+@import "compass/css3";
+
+@mixin container() {
+    @include display-box();
+    @include box-align(center);
+    @include box-direction(column);
+}
+
+$black: #343434;
+$gray: #2F2F2F;
+$green: #72CC52;
+$white: #EFEFEF;
+
+body {
+    font-size: 10px;
+}
+
+.tweet-machine-container {
+    @include container;
+
+    font-size: 1.4rem;
+
+    h1 {
+        color: $black;
+    }
+
+    .machine {
+        @include box-direction(reverse);
+        @include container;
+        padding: 2rem;
+        position: relative;
+        height: 10rem;
+        width: 24rem;
+
+        .tweet {
+            @include box-flex(1);
+            background-color: $gray;
+            color: $white;
+            margin-bottom: 1rem;
+            padding: 1rem 2rem;
+            position: absolute;
+            height: 10rem;
+            width: 20rem;
+
+            .title {
+                margin: 0;
+            }
+
+            .content {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+    .actions {
+        @include box-direction(row);
+        @include box-pack(center);
+        @include container;
+
+        button {           
+            background-color: $green;
+            border: none;
+            color: $gray;
+            line-height: 2rem;
+            padding: 0 1rem;
+            width: 10rem;
+
+            &:hover {
+                background-color: $gray;
+                color: $green;
+                cursor: pointer;
+            }
+        }
+    }
+
+}
