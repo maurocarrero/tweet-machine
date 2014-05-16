@@ -45,6 +45,8 @@ body {
             height: 10rem;
             width: 20rem;
 
+            -webkit-transition: transform 500ms;
+
             .title {
                 margin: 0;
             }
@@ -61,7 +63,7 @@ body {
         @include box-pack(center);
         @include container;
 
-        button {           
+        button {
             background-color: $green;
             border: none;
             color: $gray;
