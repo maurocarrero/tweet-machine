@@ -2,44 +2,10 @@
 <section class="tweet-machine-container">
   <h1>Tweet machine</h1>
   <section class="actions">
-    <button class="prev" ng-click="prevTweet()">Previous tweet</button>
-    <button class="next" ng-click="nextTweet()">Next tweet</button>
+    <button class="prev" ng-click="prevTweet()" ng-disabled="disablePrev">Previous tweet</button>
+    <button class="next" ng-click="nextTweet()" ng-disabled="disableNext">Next tweet</button>
   </section>
-  <section class="machine">
-    <article class="tweet">
-      <h3 class="title">Tweet One</h3>
-      <p class="content">
-        The content of the first tweet.
-      </p>
-      <span class="timestamp">Today</span>
-    </article>
-    <article class="tweet">
-      <h3 class="title">Tweet Two</h3>
-      <p class="content">
-        The content of the second tweet.
-      </p>
-      <span class="timestamp">Yesterday</span>
-    </article>
-    <article class="tweet">
-      <h3 class="title">Tweet Three</h3>
-      <p class="content">
-        The content of the third tweet.
-      </p>
-      <span class="timestamp">The day before yesterday</span>
-    </article>
-    <article class="tweet">
-      <h3 class="title">Tweet Four</h3>
-      <p class="content">
-        The content of the fourth tweet.
-      </p>
-      <span class="timestamp">The day before the day before yesterday</span>
-    </article>
-    <article class="tweet">
-      <h3 class="title">Tweet Five</h3>
-      <p class="content">
-        The content of the fifth tweet.
-      </p>
-      <span class="timestamp">The day before the day before ...</span>
-    </article>
-  </section>
+
+  <mcm-tweet-machine></mcm-tweet-machine>
+
 </section>
