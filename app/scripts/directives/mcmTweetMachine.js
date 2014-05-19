@@ -6,21 +6,20 @@ angular.module('tweetMachineApp')
       templateUrl: 'views/partials/mcmTweetMachine.html',
       restrict: 'E',
       replace: true,
-      controller: function ($scope) {
+      controller: function ($scope, $element) {
 
         $scope.tweets = tweetsModel.get();
 
         function reflow() {
           var tweets = $window.document.getElementsByClassName('tweet'),
             tweetsLength = tweets.length,
-            opacity = parseInt(100 / tweetsLength, 10),
-            separation = parseInt(100 / tweetsLength, 10);
+            opacity = 100 / tweetsLength,
+            separation = 100 / tweetsLength;
 
           angular.forEach(tweets, function (tweet, $index) {
             var idx = $index + 1,
-              thisOpacity = idx * opacity,
-              scale = idx < 10 ? idx / 10 : idx,
-              separation = 20;
+              thisOpacity = ('' + (opacity / 100)).split('.')[1],
+              scale = ('' + (idx / 100)).split('.')[1];
 
             tweet.style.opacity = (idx === tweetsLength) ? '1' : '0.' + thisOpacity;
             tweet.style.webkitTransform = 'translateY(' + (idx * separation) + 'px) scale(1.' + scale + ')';
@@ -28,31 +27,23 @@ angular.module('tweetMachineApp')
         }
 
         $scope.nextTweet = function () {
-          var machine = $window.document.getElementsByClassName('machine')[0];
+          var machine = $element[0];
+          
+          machine.removeTextNodes();
 
-          // REMOVES TEXT NODES FROM NODE LIST
-          angular.forEach(machine.childNodes, function (node) {
-            if (node.nodeType !== 1) {
-              machine.removeChild(node);
-            }
-          });
-
-          machine.insertBefore(machine.lastChild, machine.firstChild);
+          machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
           reflow();
         };
 
         $scope.prevTweet = function () {
           var machine = $window.document.getElementsByClassName('machine')[0];
 
-          // REMOVES TEXT NODES FROM NODE LIST
-          angular.forEach(machine.childNodes, function (node) {
-            if (node.nodeType !== 1) {
-              machine.removeChild(node);
-            }
-          });
+          machine.removeTextNodes();
 
-          machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
+          machine.insertBefore(machine.lastChild, machine.firstChild);
           reflow();
+
+          
         };
 
         // INIT

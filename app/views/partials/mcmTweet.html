@@ -1,6 +1,5 @@
 <article class="tweet">
-  {{ $index }}
-  <h3 class="title">{{ tweet.title }}</h3>
+  <h3 class="title">{{ $index + ': ' + tweet.title }}</h3>
   <p class="content">{{ tweet.content }}</p>
   <span class="timestamp">{{ tweet.timestamp }}</span>
 </article>
