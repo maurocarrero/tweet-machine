@@ -16,15 +16,18 @@ var mcmApi = (function () {
       }
 
       // REMOVES TEXT NODES FROM NODE LIST
-      Function.method('removeTextNodes', function () {
-        if (this instanceof HTMLCollection) {
-          angular.forEach(machine.childNodes, function (node) {
-            if (node.nodeType !== 1) {
-              machine.removeChild(node);
-            }
-          });  
-        }        
-      });
+      if (!Object.prototype.removeTextNodes || typeof Object.prototype.removeTextNodes !== 'function') {
+        Object.prototype.removeTextNodes = function () {
+          var that = this;
+          if (this.children instanceof HTMLCollection) {
+            angular.forEach(that.childNodes, function (node) {
+              if (node.nodeType !== 1) {
+                that.removeChild(node);
+              }
+            });
+          }
+        };
+      }
 
     }
   };
