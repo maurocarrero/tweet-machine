@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('tweetMachineApp')
-  .service('tweetsModel', function () {
+  .service('tweetsModel', function ($q) {
   	var service = {}, tweets;
 
   	service.get = function () {
+  		var deferred = $q.defer();
+
   		tweets = [{
 	  			title: 'Tweet one',
 	  			content: 'The content of the first tweet.',
@@ -64,8 +66,14 @@ angular.module('tweetMachineApp')
 	  		}
 	  	];
 
-  		return tweets;
+	  	deferred.resolve(tweets);
+
+  		return deferred.promise;
   	}
+
+  	this.peteco = function () {
+  		console.log('Hola Peteco'); 
+  	};
 
     return service;
   });

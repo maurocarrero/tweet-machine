@@ -19,7 +19,7 @@ var mcmApi = (function () {
       if (!Object.prototype.removeTextNodes || typeof Object.prototype.removeTextNodes !== 'function') {
         Object.prototype.removeTextNodes = function () {
           var that = this;
-          if (this.children instanceof HTMLCollection) {
+          if (this.children instanceof window.HTMLCollection) {
             angular.forEach(that.childNodes, function (node) {
               if (node.nodeType !== 1) {
                 that.removeChild(node);

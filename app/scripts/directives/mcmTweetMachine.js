@@ -1,14 +1,13 @@
 'use strict';
 
 angular.module('tweetMachineApp')
-  .directive('mcmTweetMachine', function (tweetsModel, $window) {
+  .directive('mcmTweetMachine', function (tweetsModel, $window, $timeout) {
     return {
       templateUrl: 'views/partials/mcmTweetMachine.html',
       restrict: 'E',
       replace: true,
-      controller: function ($scope, $element) {
-
-        $scope.tweets = tweetsModel.get();
+      link: function postLink (scope, element) {
+        var machine;
 
         function reflow() {
           var tweets = $window.document.getElementsByClassName('tweet'),
@@ -26,35 +25,35 @@ angular.module('tweetMachineApp')
           });
         }
 
-        $scope.nextTweet = function () {
-          var machine = $element[0];
-          
-          machine.removeTextNodes();
-
+        scope.nextTweet = function () {
           machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
           reflow();
         };
 
-        $scope.prevTweet = function () {
-          var machine = $window.document.getElementsByClassName('machine')[0];
-
-          machine.removeTextNodes();
-
+        scope.prevTweet = function () {
           machine.insertBefore(machine.lastChild, machine.firstChild);
           reflow();
-
-          
         };
-
+        
         // INIT
-        reflow();
+        tweetsModel.get().then(function(tweets) {
+          machine = element[0];
+          scope.tweets = tweets;
+          $timeout(function () {
 
-        this.addTweet = function (tweet) {
-          $scope.tweets.push(tweet);
-        }
-      },
-      link: function postLink (scope, element, attrs) {
-        console.log(scope.tweets);
+            // REFACTOR: Something's wrong here, a couple of text nodes require 
+            // to parse the list more than once
+            // I suppose that being Angular comments, they are being injected after render...
+            machine.removeTextNodes();
+            machine.removeTextNodes();
+            machine.removeTextNodes();
+
+            reflow();
+          }, 500);
+
+        });
+
+        tweetsModel.peteco();
       }
     };
   });
