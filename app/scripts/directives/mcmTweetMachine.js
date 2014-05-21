@@ -49,7 +49,9 @@ angular.module('tweetMachineApp')
 
             reflow();
           }, 500);
-
+        }, function (error) {
+          console.log('Something went wrong with the request, below the error:');
+          console.log(error);
         });
       }
     };
