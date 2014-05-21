@@ -40,7 +40,6 @@ angular.module('tweetMachineApp')
           machine = element[0];
           scope.tweets = tweets;
           $timeout(function () {
-
             // REFACTOR: Something's wrong here, a couple of text nodes require 
             // to parse the list more than once
             // I suppose that being Angular comments, they are being injected after render...
