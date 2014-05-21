@@ -1,5 +1,9 @@
 <article class="tweet">
-  <h3 class="title">{{ $index + ': ' + tweet.title }}</h3>
-  <p class="content">{{ tweet.content }}</p>
-  <span class="timestamp">{{ tweet.timestamp }}</span>
+  <span class="index">{{$index + 1}}</span>
+  <h3 class="title">{{ tweet.text }}</a></h3>
+  <p class="content">
+    <span>User: {{ tweet.user.name }}</span>
+    <span>Location: {{ tweet.user.location }}</span>
+  </p>
+  <span class="timestamp">{{ tweet.created_at | date: 'dd/MM/yyyy @ h:mma' }}</span>
 </article>

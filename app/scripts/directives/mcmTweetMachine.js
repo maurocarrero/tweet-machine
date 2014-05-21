@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('tweetMachineApp')
-  .directive('mcmTweetMachine', function (tweetsModel, $window, $timeout) {
+  .directive('mcmTweetMachine', ['tweetsModel', '$window', '$timeout', function (tweetsModel, $window, $timeout) {
     return {
       templateUrl: 'views/partials/mcmTweetMachine.html',
       restrict: 'E',
@@ -52,8 +52,6 @@ angular.module('tweetMachineApp')
           }, 500);
 
         });
-
-        tweetsModel.peteco();
       }
     };
-  });
+  }]);

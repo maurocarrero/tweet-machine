@@ -1,79 +1,57 @@
 'use strict';
 
 angular.module('tweetMachineApp')
-  .service('tweetsModel', function ($q) {
-  	var service = {}, tweets;
+  .service('tweetsModel', ['$q', '$http', function ($q, $http) {
+    var service = {}, 
+      tweetsCache = [],
+      urls = {
+        userTimeline: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=twitterapi',
+        search: 'https://api.twitter.com/1.1/search/tweets.json?q=macklemore&result_type=mixed&count=10'
+      },
 
-  	service.get = function () {
-  		var deferred = $q.defer();
+      // GET CREDENTIALS FROM A config.json FILE
+      getCredentials = function () {
+        return $http.get('config.json').then(function (response) {
+          var apiKey = encodeURI(response.data.apiKey),
+            apiSecret = encodeURI(response.data.apiSecret);
+          return btoa(apiKey + ':' + apiSecret);
+        });
+      },
 
-  		tweets = [{
-	  			title: 'Tweet one',
-	  			content: 'The content of the first tweet.',
-	  			timestamp: 'Today'
-	  		}, {
-	  			title: 'Tweet two',
-	  			content: 'The content of the second tweet.',
-	  			timestamp: 'Yesterday'
-	  		}, {
-	  			title: 'Tweet three',
-	  			content: 'The content of the third tweet.',
-	  			timestamp: 'The before yesterday'
-	  		}, {
-	  			title: 'Tweet four',
-	  			content: 'The content of the fourth tweet.',
-	  			timestamp: 'Before before Yesterday'
-	  		}, {
-	  			title: 'Tweet five',
-	  			content: 'The content of the fifth tweet.',
-	  			timestamp: 'Before before before Yesterday'
-	  		}, {
-	  			title: 'Tweet six',
-	  			content: 'The content of the sixth tweet.',
-	  			timestamp: 'Before before before before Yesterday'
-	  		}, {
-	  			title: 'Tweet seven',
-	  			content: 'The content of the seventh tweet.',
-	  			timestamp: 'Before before before before before Yesterday'
-	  		}, {
-	  			title: 'Tweet one',
-	  			content: 'The content of the first tweet.',
-	  			timestamp: 'Today'
-	  		}, {
-	  			title: 'Tweet two',
-	  			content: 'The content of the second tweet.',
-	  			timestamp: 'Yesterday'
-	  		}, {
-	  			title: 'Tweet three',
-	  			content: 'The content of the third tweet.',
-	  			timestamp: 'The before yesterday'
-	  		}, {
-	  			title: 'Tweet four',
-	  			content: 'The content of the fourth tweet.',
-	  			timestamp: 'Before before Yesterday'
-	  		}, {
-	  			title: 'Tweet five',
-	  			content: 'The content of the fifth tweet.',
-	  			timestamp: 'Before before before Yesterday'
-	  		}, {
-	  			title: 'Tweet six',
-	  			content: 'The content of the sixth tweet.',
-	  			timestamp: 'Before before before before Yesterday'
-	  		}, {
-	  			title: 'Tweet seven',
-	  			content: 'The content of the seventh tweet.',
-	  			timestamp: 'Before before before before before Yesterday'
-	  		}
-	  	];
+      getToken = function (credentials) {
+        return $http({
+          url: 'https://api.twitter.com/oauth2/token',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'Authorization': 'Basic ' + credentials
+          },
+          data: 'grant_type=client_credentials'
+        }).then(function (response) {
+          return response.data.access_token;
+        });
+      },
 
-	  	deferred.resolve(tweets);
+      sendRequest = function (url, token) {
+        return $http({
+          url: url,
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          }
+        }).then(function (response) {
+          tweetsCache = response.data.statuses;
+          return tweetsCache;
+        });
+      };
 
-  		return deferred.promise;
-  	}
-
-  	this.peteco = function () {
-  		console.log('Hola Peteco'); 
-  	};
+    service.get = function () {
+      return getCredentials().then(function (credentials) {
+        return getToken(credentials).then(function (token) {
+          return sendRequest(urls.search, token);
+        });
+      });
+    }
 
     return service;
-  });
+  }]);
