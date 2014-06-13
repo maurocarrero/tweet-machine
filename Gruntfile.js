@@ -386,8 +386,13 @@ module.exports = function (grunt) {
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
+      'proxy',
       'watch'
     ]);
+  });
+
+  grunt.registerTask('proxy', function (target) {
+    require("child_process").spawn("node", ["proxy.js"]);
   });
 
   grunt.registerTask('server', function (target) {
