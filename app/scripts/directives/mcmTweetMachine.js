@@ -12,16 +12,15 @@ angular.module('tweetMachineApp')
         function reflow() {
           var tweets = $window.document.getElementsByClassName('tweet'),
             tweetsLength = tweets.length,
-            opacity = 100 / tweetsLength,
-            separation = 100 / tweetsLength;
+            opacity = 1 / tweetsLength,
+            separation = 200 / tweetsLength,
+            scale = 1 / tweetsLength;
 
           angular.forEach(tweets, function (tweet, $index) {
-            var idx = $index + 1,
-              thisOpacity = ('' + (opacity / 100)).split('.')[1],
-              scale = ('' + (idx / 100)).split('.')[1];
+            var idx = $index + 1;
 
-            tweet.style.opacity = (idx === tweetsLength) ? '1' : '0.' + thisOpacity;
-            tweet.style.webkitTransform = 'translateY(' + (idx * separation) + 'px) scale(1.' + scale + ')';
+            tweet.style.opacity = opacity * idx;
+            tweet.style.webkitTransform = 'translateY(' + (idx * separation) + 'px) scale(' + (scale * idx) + ')';
           });
         }
 
