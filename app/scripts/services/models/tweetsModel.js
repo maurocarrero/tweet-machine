@@ -35,7 +35,6 @@ angular.module('tweetMachineApp')
         var deferred = $q.defer(),
           data = tweetsCache.get('tweets');
         if (!data) {
-          console.log("FROM REQUEST");
           $http.get('http://localhost:8888/tweets').then(function (response) {
             tweetsCache.put('tweets', response.data);
             deferred.resolve(response.data);
@@ -43,7 +42,6 @@ angular.module('tweetMachineApp')
             deferred.reject(error);
           });
         } else {
-          console.log("FROM CACHE");
           deferred.resolve(data);
         }
         return deferred.promise;

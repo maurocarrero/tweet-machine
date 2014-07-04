@@ -2,10 +2,9 @@ var x = require("express"),
     http = require("request"),
     q = require("q");
     btoa = require("btoa");
-    fs = require('fs');
-    config = "app/config.json";
+    fs = require("fs"),
+    config = "app/config.json",
     app = x(),
-    require('q'),
     tweetsCache = [],
     urls = {
       userTimeline: "https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=twitterapi",
@@ -27,11 +26,10 @@ var x = require("express"),
             deferred.reject(new Error(error));
           } else {
             data = JSON.parse(data);
-
-            apiKey = encodeURI(data.apiKey),
+            apiKey = encodeURI(data.apiKey);
             apiSecret = encodeURI(data.apiSecret);
             credentials = btoa(apiKey + ':' + apiSecret);
-            
+          
             deferred.resolve(credentials);
           }
         });
@@ -104,7 +102,6 @@ app.all('/*', function(req, res, next) {
 });
 
 app.get("/tweets", function (req, res) {
-
   getCredentials().then(function (credentials) {
     getToken(credentials).then(function (token) {
       sendRequest(urls.search, token).then(function (response) {
