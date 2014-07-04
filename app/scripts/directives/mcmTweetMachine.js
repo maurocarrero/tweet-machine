@@ -34,10 +34,15 @@ angular.module('tweetMachineApp')
           reflow();
         };
         
+        scope.disablePrev = true;
+        scope.disableNext = true;
+
         // INIT
         tweetsModel.get().then(function(tweets) {
           machine = element[0];
           scope.tweets = tweets;
+          scope.disablePrev = false;
+          scope.disableNext = false;
           $timeout(function () {
             // REFACTOR: Something's wrong here, a couple of text nodes require 
             // to parse the list more than once

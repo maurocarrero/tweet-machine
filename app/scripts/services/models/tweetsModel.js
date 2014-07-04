@@ -26,77 +26,27 @@
 'use strict';
 
 angular.module('tweetMachineApp')
-  .service('tweetsModel', ['$q', '$http', function ($q, $http) {
-    var service = {}, 
-      tweetsCache = [],
-      urls = {
-        userTimeline: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=twitterapi',
-        search: 'https://api.twitter.com/1.1/search/tweets.json?q=suarez&result_type=mixed&count=10'
-      },
-      credentials,
-      token,
+  .service('tweetsModel', ['$http', '$q', '$cacheFactory', function ($http, $q, $cacheFactory) {
 
-      // GET CREDENTIALS FROM A config.json FILE
-      getCredentials = function () {
-        var deferred = $q.defer();
-        if (credentials) {
-          deferred.resolve(credentials);
-        } else {
-          $http.get('config.json').then(function (response) {
-            var apiKey = encodeURI(response.data.apiKey),
-              apiSecret = encodeURI(response.data.apiSecret);
-            credentials = btoa(apiKey + ':' + apiSecret);
-            deferred.resolve(credentials);
+    var tweetsCache = $cacheFactory('tweets');
+    
+    return {
+      get: function () {
+        var deferred = $q.defer(),
+          data = tweetsCache.get('tweets');
+        if (!data) {
+          console.log("FROM REQUEST");
+          $http.get('http://localhost:8888/tweets').then(function (response) {
+            tweetsCache.put('tweets', response.data);
+            deferred.resolve(response.data);
           }, function (error) {
             deferred.reject(error);
           });
-        }
-        return deferred.promise;
-      },
-
-      getToken = function (credentials) {
-        var deferred = $q.defer();
-        if (token) {
-          deferred.resolve(token);
         } else {
-          $http({
-            url: 'https://api.twitter.com/oauth2/token',
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-              'Authorization': 'Basic ' + credentials
-            },
-            data: 'grant_type=client_credentials'
-          }).then(function (response) {
-            token = response.data.access_token;
-            deferred.resolve(token);
-          }, function (error) {
-            deferred.reject(error);
-          });
+          console.log("FROM CACHE");
+          deferred.resolve(data);
         }
         return deferred.promise;
-      },
-
-      sendRequest = function (url, token) {
-        return $http({
-          url: url,
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + token
-          }
-        }).then(function (response) {
-          tweetsCache = response.data.statuses;
-          return tweetsCache;
-        });
-      };
-
-    service.get = function () {
-      return getCredentials().then(function (credentials) {
-        return getToken(credentials).then(function (token) {
-          return sendRequest(urls.search, token);
-        });
-      });
-    }
-
-    return service;
+      }
+    };
   }]);

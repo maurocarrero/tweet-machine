@@ -391,8 +391,9 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('proxy', function (target) {
-    require("child_process").spawn("node", ["proxy.js"]);
+  grunt.registerTask('proxy', function () {
+    console.log('PROXY STARTED');
+    require('child_process').spawn('node', ['proxy.js']);
   });
 
   grunt.registerTask('server', function (target) {
