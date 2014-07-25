@@ -53,15 +53,23 @@ angular.module('tweetMachineApp')
 
         scope.nextTweet = function () {
           if (!machine.firstChild.getAttribute('the-first')) {
+            scope.disableNext = false;
             machine.insertBefore(machine.lastChild, machine.firstChild);
             reflow();  
+          } else {
+            scope.disableNext = false;
+            scope.disablePrev = false;
           }
         };
 
         scope.prevTweet = function () {
           if (!machine.firstChild.getAttribute('the-last')) {
+            scope.disablePrev = false;
             machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
             reflow();
+          } else {
+            scope.disablePrev = false;
+            scope.disableNext = false;
           }
         };
         
