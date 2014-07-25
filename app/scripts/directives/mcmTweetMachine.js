@@ -7,31 +7,62 @@ angular.module('tweetMachineApp')
       restrict: 'E',
       replace: true,
       link: function postLink (scope, element) {
-        var machine;
+        var machine,
+          map = Array.prototype.map;
 
         function reflow() {
           var tweets = $window.document.getElementsByClassName('tweet'),
             tweetsLength = tweets.length,
             opacity = 1 / tweetsLength,
-            separation = 200 / tweetsLength,
+            separation = 450 / tweetsLength,
             scale = 1 / tweetsLength;
 
           angular.forEach(tweets, function (tweet, $index) {
             var idx = $index + 1;
 
             tweet.style.opacity = opacity * idx;
-            tweet.style.webkitTransform = 'translateY(' + (idx * separation) + 'px) scale(' + (scale * idx) + ')';
+            tweet.style.webkitTransform = 'translateY(' + ($index * separation) + 'px) scale(' + (scale * idx) + ')';
+          });
+        }
+
+        function prepareTweets() {
+          var tweets = $window.document.getElementsByClassName('tweet');
+
+          machine.firstChild.setAttribute('the-last', true);
+          machine.firstChild.nextSibling.setAttribute('the-first', true);
+
+          map.call(tweets, function (tweet) {
+            var bgImage = tweet.getAttribute('data-bg-image'),
+              bgColor = tweet.getAttribute('data-bg-color'),
+              bgRepeat = tweet.getAttribute('data-bg-repeat'),
+              borderColor = tweet.getAttribute('data-border-color'),
+              fontColor = tweet.getAttribute('data-font-color');
+            
+            if (bgImage) {
+              tweet.style.backgroundImage = 'url(' + bgImage + ')';
+              tweet.style.backgroundPosition = 'bottom';
+              tweet.style.backgroundRepeat = (bgRepeat) ? 'repeat' : 'no-repeat';
+            }
+            if (bgColor) {
+              tweet.style.backgroundColor = '#' + bgColor;
+            }
+            tweet.style.borderColor = (borderColor) ? '#' + borderColor : '#343434';
+            tweet.style.color = (fontColor) ? '#' + fontColor : '#343434';
           });
         }
 
         scope.nextTweet = function () {
-          machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
-          reflow();
+          if (!machine.firstChild.getAttribute('the-first')) {
+            machine.insertBefore(machine.lastChild, machine.firstChild);
+            reflow();  
+          }
         };
 
         scope.prevTweet = function () {
-          machine.insertBefore(machine.lastChild, machine.firstChild);
-          reflow();
+          if (!machine.firstChild.getAttribute('the-last')) {
+            machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
+            reflow();
+          }
         };
         
         scope.disablePrev = true;
@@ -40,19 +71,15 @@ angular.module('tweetMachineApp')
         // INIT
         tweetsModel.get().then(function(tweets) {
           machine = element[0];
+          tweets = tweets.reverse();
           scope.tweets = tweets;
           scope.disablePrev = false;
           scope.disableNext = false;
           $timeout(function () {
-            // REFACTOR: Something's wrong here, a couple of text nodes require 
-            // to parse the list more than once
-            // I suppose that being Angular comments, they are being injected after render...
             machine.removeTextNodes();
-            machine.removeTextNodes();
-            machine.removeTextNodes();
-
+            prepareTweets();
             reflow();
-          }, 500);
+          });
         }, function (error) {
           console.log('Something went wrong with the request, below the error:');
           console.log(error);

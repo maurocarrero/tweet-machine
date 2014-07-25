@@ -1,9 +1,16 @@
-<article class="tweet">
-  <span class="index">{{$index + 1}}</span>
+<article class="tweet" 
+	data-bg-image="{{ tweet.user.profile_background_image_url }}"
+	data-bg-color="{{ tweet.user.profile_background_color }}"
+	data-bg-repeat="{{ tweet.user.profile_background_tile }}",
+	data-border-color="{{ tweet.user.profile_sidebar_border_color }}",
+	data-font-color="{{ tweet.user.profile_text_color }}">
+  <span class="index">{{ tweet.created_at | date: 'dd/MM/yyyy @ h:mma' }}</span>
   <h3 class="title">{{ tweet.text }}</a></h3>
   <p class="content">
     <span>User: {{ tweet.user.name }}</span>
+    <span>Screen name: {{ tweet.user.screen_name }}</span>
     <span>Location: {{ tweet.user.location }}</span>
+    <figure class="avatar"><img ng-src="{{tweet.user.profile_image_url}}" /></figure>
+    <figure><img ng-src="{{tweet.user.profile_banner_url}}" /></figure>
   </p>
-  <span class="timestamp">{{ tweet.created_at | date: 'dd/MM/yyyy @ h:mma' }}</span>
 </article>
