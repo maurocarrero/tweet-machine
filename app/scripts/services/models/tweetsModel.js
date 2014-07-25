@@ -31,8 +31,9 @@ angular.module('tweetMachineApp')
           $http.get('http://localhost:8888/tweets').then(function (response) {
             var tweets = response.data;
             correctDate(tweets);
+            tweets = paginate(tweets);
             tweetsCache.put('tweets', tweets);
-            deferred.resolve(tweets);
+            deferred.resolve(tweets[1]);
           }, function (error) {
             deferred.reject(error);
           });

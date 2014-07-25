@@ -8,7 +8,12 @@ angular.module('tweetMachineApp')
       replace: true,
       link: function postLink (scope, element) {
         var machine,
-          map = Array.prototype.map;
+          map = Array.prototype.map,
+
+          enableBothButtons = function () {
+            scope.disableNext = false;
+            scope.disablePrev = false;
+          };
 
         function reflow() {
           var tweets = $window.document.getElementsByClassName('tweet'),
@@ -53,23 +58,23 @@ angular.module('tweetMachineApp')
 
         scope.nextTweet = function () {
           if (!machine.firstChild.getAttribute('the-first')) {
-            scope.disableNext = false;
             machine.insertBefore(machine.lastChild, machine.firstChild);
-            reflow();  
+            reflow();
+            scope.disablePrev = false;
           } else {
-            scope.disableNext = false;
+            scope.disableNext = true;
             scope.disablePrev = false;
           }
         };
 
         scope.prevTweet = function () {
           if (!machine.firstChild.getAttribute('the-last')) {
-            scope.disablePrev = false;
             machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
             reflow();
-          } else {
-            scope.disablePrev = false;
             scope.disableNext = false;
+          } else {
+            scope.disableNext = false;
+            scope.disablePrev = true;
           }
         };
         
@@ -81,7 +86,6 @@ angular.module('tweetMachineApp')
           machine = element[0];
           tweets = tweets.reverse();
           scope.tweets = tweets;
-          scope.disablePrev = false;
           scope.disableNext = false;
           $timeout(function () {
             machine.removeTextNodes();

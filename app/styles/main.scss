@@ -14,6 +14,44 @@ $gray: #2F2F2F;
 $green: #72CC52;
 $white: #EFEFEF;
 
+@font-face {
+    font-family: 'icomoon';
+    src:url('fonts/icomoon.eot?-ekbp93');
+    src:url('fonts/icomoon.eot?#iefix-ekbp93') format('embedded-opentype'),
+        url('fonts/icomoon.woff?-ekbp93') format('woff'),
+        url('fonts/icomoon.ttf?-ekbp93') format('truetype'),
+        url('fonts/icomoon.svg?-ekbp93#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-point-up:before {
+    content: "\e600";
+}
+.icon-point-down:before {
+    content: "\e601";
+}
+.icon-twitter:before {
+    content: "\e602";
+}
+.icon-github:before {
+    content: "\e603";
+}
+
 body {
     font-size: 16px;
     font-family: helvetica, sans-serif;
@@ -76,6 +114,12 @@ body {
     h1 {
         color: #8EC1DA;
         font-size: 3rem;
+        width: 100%;
+        text-align: center;
+        background-color: #343434;
+        line-height: 7rem;
+        z-index: 500;
+        margin: 1rem 0 0 0;
     }
 
     .machine {
@@ -86,7 +130,7 @@ body {
         position: relative;
         //top: -7rem;
         //left: -18rem;
-        width: 24rem;
+        // width: 24rem;
 
         .tweet {
             @include box-flex(1);
@@ -95,16 +139,16 @@ body {
             margin-bottom: 1rem;
             padding: 1rem 2rem;
             position: absolute;
-            height: 30rem;
-            width: 60rem;
-            top: -15rem;
-            left: -18rem;
+            height: 20rem;
+            width: 40rem;
+            top: -16rem;
+            left: -20rem;
             opacity: 0;
 
             @include single-transition(all, 300ms, linear);
 
             .title {
-                font-size: 1.5rem;
+                font-size: 1rem;
                 margin: 0;
                 width: 90%;
             }
@@ -142,7 +186,7 @@ body {
                 font-weight: bold;
                 position: absolute;
                 bottom: 1rem;
-                left: 80%;
+                left: 70%;
                 width: 12rem;
                 text-align: center;
                 line-height: 2rem;
@@ -153,25 +197,47 @@ body {
     }
     .actions {
 
-        @include box-direction(row);
-        @include box-pack(center);
+        // @include box-direction(row);
+        // @include box-pack(center);
         @include container;
 
-        position: relative;
+        border-radius: 1rem;
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
         z-index: 500;
+        width: 10rem;
 
         button {
-            background-color: $green;
             border: none;
-            color: $gray;
-            line-height: 2rem;
-            padding: 0 1rem;
-            width: 10rem;
+            position: relative;
 
             &:hover {
                 background-color: $gray;
                 color: $green;
                 cursor: pointer;
+            }
+            &:disabled {
+                &:before {
+                    background-color: #999;
+                }
+            }
+            &:before {
+                background-color: $green;
+                font-family: icomoon;
+                font-size: 4rem;
+                position: relative;
+
+            }
+            &.next {
+                &:after {
+                    content: "\e600";
+                }
+            }
+            &.prev {
+                &:before {
+                    content: "\e600";
+                }
             }
         }
     }
