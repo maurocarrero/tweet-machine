@@ -1,3 +1,9 @@
-<section class="machine">
-  <mcm-tweet ng-repeat="tweet in tweets"></mcm-tweet>
+<section class="flex-container">
+	<section class="actions">
+		<button class="prev" ng-click="prevTweet()" ng-show="enablePrev"></button>
+		<button class="next" ng-click="nextTweet()" ng-show="enableNext"></button>
+	</section>
+	<section class="machine">
+	  	<mcm-tweet ng-repeat="tweet in tweets"></mcm-tweet>
+	</section>
 </section>

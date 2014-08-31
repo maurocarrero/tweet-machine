@@ -6,13 +6,14 @@ angular.module('tweetMachineApp')
       templateUrl: 'views/partials/mcmTweetMachine.html',
       restrict: 'E',
       replace: true,
+      scope: {},
       link: function postLink (scope, element) {
         var machine,
           map = Array.prototype.map,
 
           enableBothButtons = function () {
-            scope.disableNext = false;
-            scope.disablePrev = false;
+            scope.enableNext = true;
+            scope.enablePrev = true;
           };
 
         function reflow() {
@@ -56,37 +57,38 @@ angular.module('tweetMachineApp')
           });
         }
 
-        scope.nextTweet = function () {
-          if (!machine.firstChild.getAttribute('the-first')) {
-            machine.insertBefore(machine.lastChild, machine.firstChild);
-            reflow();
-            scope.disablePrev = false;
-          } else {
-            scope.disableNext = true;
-            scope.disablePrev = false;
-          }
-        };
 
         scope.prevTweet = function () {
           if (!machine.firstChild.getAttribute('the-last')) {
             machine.insertBefore(machine.firstChild, machine.lastChild.nextSibling);
             reflow();
-            scope.disableNext = false;
+            scope.enableNext = true;
           } else {
-            scope.disableNext = false;
-            scope.disablePrev = true;
+            scope.enableNext = true;
+            scope.enablePrev = false;
           }
         };
         
-        scope.disablePrev = true;
-        scope.disableNext = true;
+        scope.nextTweet = function () {
+          if (!machine.firstChild.getAttribute('the-first')) {
+            machine.insertBefore(machine.lastChild, machine.firstChild);
+            reflow();
+            scope.enablePrev = true;
+          } else {
+            scope.enableNext = false;
+            scope.enablePrev = true;
+          }
+        };
+
+        scope.enaablePrev = false;
+        scope.enableNext = false;
 
         // INIT
         tweetsModel.get().then(function(tweets) {
-          machine = element[0];
+          machine = angular.element(element[0]).children()[1];
           tweets = tweets.reverse();
           scope.tweets = tweets;
-          scope.disableNext = false;
+          scope.enableNext = true;
           $timeout(function () {
             machine.removeTextNodes();
             prepareTweets();

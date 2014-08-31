@@ -1,0 +1,14 @@
+@mixin flex-container() {
+	height: 100%;
+	width: 100%;
+	@include flexbox((
+		display: flex,
+    	align-items: flex-start,
+    	flex-direction: column
+	));
+}
+@mixin flex-element() {
+	@include flex(1);
+    @include order(1);
+}
+
